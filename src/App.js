@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import User from './User';
 
 import './App.css';
 
-const users = [
+const data = [
   {
     name: 'Isa',
     description: 'Gosta de sorvete'
@@ -20,11 +20,53 @@ const users = [
 ];
 
 function App() {
+  const [users, setUsers] = useState(data);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    console.log('Componente App montado! :D');
+  }, []);
+  
+  useEffect(() => {
+    console.log(`Input "description" foi alterado >>> ${description}`);
+  }, [description]);
+  
+  useEffect(() => {
+    console.log(`Input "name" foi alterado >>> ${name}`);
+  }, [name]);
+  
+  useEffect(() => {
+    console.log('A lista de usuários foi atualizada! :D');
+  }, [users]);
+  
+  useEffect(() => {
+    console.log('Alguma variável de estado foi alterada!');
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    setUsers([ ...users, { name, description } ]);
+  }
+
   return (
     <div className="App">
-      <User name={users[0].name} description={users[0].description} />
-      <User name={users[1].name} description={users[1].description} />
-      <User name={users[2].name} description={users[2].description} />
+      {
+        users.map((user, index) => (
+          <User
+            key={index}
+            name={user.name}
+            description={user.description}
+          />
+        ))
+      }
+
+      <form>
+        <input type='text' value={name} onChange={(event) => setName(event.target.value)} />
+        <input type='text' value={description} onChange={(event) => setDescription(event.target.value)} />
+        <button type='submit' onClick={(event) => handleSubmit(event)}>Criar novo usuário</button>
+      </form>
     </div>
   );
 }
