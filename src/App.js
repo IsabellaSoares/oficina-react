@@ -24,8 +24,19 @@ function App() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
+  const [pokemons, setPokemons] = useState([]);
+
   useEffect(() => {
     console.log('Componente App montado! :D');
+  }, []);
+
+  useEffect(() => {
+    fetch('https://pokeapi.co/api/v2/type/5')
+      .then(result => result.json())
+      .then(result => {
+        console.log(result)
+        setPokemons(result.pokemon)
+      });
   }, []);
   
   useEffect(() => {
@@ -52,21 +63,31 @@ function App() {
 
   return (
     <div className="App">
-      {
-        users.map((user, index) => (
-          <User
-            key={index}
-            name={user.name}
-            description={user.description}
-          />
-        ))
-      }
+      <section>
+        {
+          users.map((user, index) => (
+            <User
+              key={index}
+              name={user.name}
+              description={user.description}
+            />
+          ))
+        }
 
-      <form>
-        <input type='text' value={name} onChange={(event) => setName(event.target.value)} />
-        <input type='text' value={description} onChange={(event) => setDescription(event.target.value)} />
-        <button type='submit' onClick={(event) => handleSubmit(event)}>Criar novo usuário</button>
-      </form>
+        <form>
+          <input type='text' value={name} onChange={(event) => setName(event.target.value)} />
+          <input type='text' value={description} onChange={(event) => setDescription(event.target.value)} />
+          <button type='submit' onClick={(event) => handleSubmit(event)}>Criar novo usuário</button>
+        </form>
+      </section>
+
+      <section>
+        {
+          pokemons.map(pokemon => (
+            <p>{pokemon.pokemon.name}</p>
+          ))
+        }
+      </section>
     </div>
   );
 }
